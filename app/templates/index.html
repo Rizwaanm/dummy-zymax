@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Summarizer</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Text Summarizer</h1>
+        <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+        <button id="summarize-btn">Summarize</button>
+        <div id="output">
+            <h2>Summary:</h2>
+            <p id="summary-text"></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('summarize-btn').addEventListener('click', async () => {
+            const inputText = document.getElementById('input-text').value;
+
+            if (!inputText.trim()) {
+                alert("Please enter some text!");
+                return;
+            }
+
+            const response = await fetch('/summarize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: inputText })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById('summary-text').innerText = data.summary;
+            } else {
+                alert("Error: " + data.error);
+            }
+        });
+    </script>
+</body>
+</html>
